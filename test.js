@@ -195,3 +195,27 @@ test('respects gitignore option false - sync', t => {
 	const actual = m.sync('*', {gitignore: false, onlyFiles: false});
 	t.true(actual.indexOf('node_modules') > -1);
 });
+
+test('throws ENOTDIR when specifying a file as cwd - async', async t => {
+	t.plan(1);
+
+	const isFile = path.resolve('fixtures/gitignore/bar.js');
+
+	try {
+		await m('.', {cwd: isFile});
+	} catch (err) {
+		t.is('ENOTDIR', err.code);
+	}
+});
+
+test('throws ENOTDIR when specifying a file as cwd - sync', t => {
+	t.plan(1);
+
+	const isFile = path.resolve('fixtures/gitignore/bar.js');
+
+	try {
+		m.sync('.', {cwd: isFile});
+	} catch (err) {
+		t.is('ENOTDIR', err.code);
+	}
+});
